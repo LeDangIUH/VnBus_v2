@@ -40,7 +40,7 @@
             android:value="@integer/google_play_services_version" />
         
         <activity
-            android:name="fitiuh.edu.vn.vnbus.VNB_F_001"
+            android:name="fitiuh.edu.vn.vnbus.FN0001"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
