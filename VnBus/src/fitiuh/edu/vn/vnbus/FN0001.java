@@ -3,21 +3,35 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
+
 import fitiuh.edu.vn.base.BaseDatabaseActivity;
+import fitiuh.edu.vn.base.BaseMapActivity;
 import fitiuh.edu.vn.common.Common;
 import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
+import fitiuh.edu.vn.model.BusGPSRealtime;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
 import fitiuh.edu.vn.model.BusTimeSpace;
 import fitiuh.edu.vn.model.BusTimeSpaceIndex;
+import fitiuh.edu.vn.model.SwitchMarker;
 import android.R.integer;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 
-public class FN0001 extends Activity {
+public class FN0001 extends BaseMapActivity {
 	
 	List<BusCountLocation> busCountLocations = null;
 	List<BusLocationGPS> busLocationGPSs = null;
@@ -25,13 +39,14 @@ public class FN0001 extends Activity {
 	List<BusAllID> busAllIDs = null;
 	List<BusTimeSpace> busTimeSpaces = null;
 	List<BusTimeSpaceIndex> busTimeSpaceIndexs = null;
+	List<BusGPSRealtime> busGPSRealtimes = null;
+	SwitchMarker switchMarker = new SwitchMarker();
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fn0001);	
-		
+	protected void startDemo() {
+		// run and get google map 
+		getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(10.773223266971607, 106.70639541003383), 10)); 
+		//database basic
 		BaseDatabaseActivity baseDatabaseActivity = new BaseDatabaseActivity(getApplicationContext());
 		try {
 			baseDatabaseActivity.createDataBase();
@@ -53,8 +68,16 @@ public class FN0001 extends Activity {
 		
 		busTimeSpaces= timeSpace();
 		busTimeSpaceIndexs = getIndexBusTime(busTimeSpaces);
-		
-		
+		//get location realtime auto
+		busGPSRealtimes = getLocationRealtime(busTimeSpaceIndexs,busLocationGPSs);
+		//display loacation realtime into map
+		addMarker(busGPSRealtimes);
+	}
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
 	}
 	
 	@Override
@@ -63,6 +86,36 @@ public class FN0001 extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	public void addMarker(List<BusGPSRealtime> busGPSRealtimes) {
+		for (BusGPSRealtime gpsRealtime : busGPSRealtimes) {
+			getMap().addMarker(new MarkerOptions()
+					.position(new LatLng(getLatitude(gpsRealtime.getLocation()), getLongitude(gpsRealtime.getLocation())))
+					.title(gpsRealtime.getBusID())
+					.icon(BitmapDescriptorFactory.fromResource(switchMarker.chooseMarker(gpsRealtime.getBusID()))));
+		}
+	}
+	
+	//get longitude gps
+	public double getLongitude(String location) {
+		
+		double longitudeBus = 0.0;
+		String[] aLocation = location.trim().split(",");
+		longitudeBus = Double.parseDouble(aLocation[1]);
+		
+		return longitudeBus;
+	}
+	
+	//get latitude gps
+	public double getLatitude(String location) {
+		
+		double latitudeBus = 0.0;
+		String[] aLocation = location.trim().split(",");
+		latitudeBus = Double.parseDouble(aLocation[0]);
+		
+		return latitudeBus;
+	}
+	
 	
 	//convert string to int and second value
 	public int convertTime(String time)
@@ -100,19 +153,20 @@ public class FN0001 extends Activity {
 	//List <BusTimeSpace> from List<BusTime>
 	public List<BusTimeSpace> timeSpace(){
 		
+		List<Integer> timeSpaceDetail = null;
 		List<BusTimeSpace> busTimeSpaces = new ArrayList<BusTimeSpace>();
-		BusTimeSpace bTime = new BusTimeSpace();
-		
 		for(BusTime busTime : busTimes){
-			bTime.setBusID(busTime.getBusID());
 			for (BusCountLocation busCountLocation : busCountLocations) {
 				if ((busTime.getBusID()).equals(busCountLocation.getBusID())) {
-					bTime.setTimeSpaceDetail(timeSpaceDeatail(busTime.getTimeStart(),busTime.getTimeEnd(),busCountLocation.getCountLocation()));
+					BusTimeSpace bTime = new BusTimeSpace();
+					bTime.setBusID(busTime.getBusID());
+					timeSpaceDetail = timeSpaceDeatail(busTime.getTimeStart(),busTime.getTimeEnd(),busCountLocation.getCountLocation());
+					bTime.setTimeSpaceDetail(timeSpaceDetail);
+					busTimeSpaces.add(bTime);
 					break;
 				}
-			}
+			}	
 			
-			busTimeSpaces.add(bTime);
 		}
 		
 		return busTimeSpaces;
@@ -156,20 +210,29 @@ public class FN0001 extends Activity {
 		int valueTemporary = 0;
 		
 		List<BusTimeSpaceIndex> busTimeSpaceIndexs = new ArrayList<BusTimeSpaceIndex>();
-		BusTimeSpaceIndex timeSpaceIndex = new BusTimeSpaceIndex();
+		
 		
 		for (BusTimeSpace timeSpace : busTimeSpaces){
 			
-			timeSpaceIndex.setBusID(timeSpace.getBusID());
-			
 			timeDetail = timeSpace.getTimeSpaceDetail();
-			for (int i = 0; i < timeDetail.size(); i++) {
+			int numTimeDetail = timeDetail.size();
+			
+			for (int i = 0; i < numTimeDetail; i++) {
+				BusTimeSpaceIndex timeSpaceIndex = new BusTimeSpaceIndex();
+				
 				if (timeNow == timeDetail.get(i)) {
 					timeSpaceIndex.setIndexBus(i);
+					timeSpaceIndex.setBusID(timeSpace.getBusID());
+					busTimeSpaceIndexs.add(timeSpaceIndex);
+					break;
+					
 				} else {
 					//set value is -1 if timenow not scope of time for bus start
-					if ((timeNow < timeDetail.get(0)) || (timeNow > timeDetail.get(timeDetail.size()))) {
+					if (timeNow < timeDetail.get(0) || timeNow > timeDetail.get(numTimeDetail-1)) {
 						timeSpaceIndex.setIndexBus(-1);
+						timeSpaceIndex.setBusID(timeSpace.getBusID());
+						busTimeSpaceIndexs.add(timeSpaceIndex);
+						break;
 					} else {
 						indexTemporary = i;
 						valueTemporary = timeDetail.get(i);
@@ -180,16 +243,40 @@ public class FN0001 extends Activity {
 						 */
 						if (valueTemporary > timeNow) {
 							indexTemporary = i -1;
-							timeSpaceIndex.setIndexBus(indexTemporary); 
+							timeSpaceIndex.setIndexBus(indexTemporary);
+							timeSpaceIndex.setBusID(timeSpace.getBusID());
+							busTimeSpaceIndexs.add(timeSpaceIndex);
 							break;
 						}
 					}
 				}
-			}
-			
-			busTimeSpaceIndexs.add(timeSpaceIndex);
+			}		
 		}
 		
 		return busTimeSpaceIndexs;
+	}
+	
+	public List<BusGPSRealtime> getLocationRealtime(List<BusTimeSpaceIndex> busTimeSpaceIndexs, List<BusLocationGPS> busLocationGPSs) {
+		
+		List<BusGPSRealtime> busGPSRealtimes = new ArrayList<BusGPSRealtime>();
+		BusGPSRealtime busGPSRealtime = null;
+		for (BusTimeSpaceIndex timeSpaceIndex : busTimeSpaceIndexs) {
+			for (BusLocationGPS locationGPS : busLocationGPSs) {
+				if (timeSpaceIndex.getBusID().equals(locationGPS.getBusID())) {
+					if (timeSpaceIndex.getIndexBus() == locationGPS.getSortNum()){
+						busGPSRealtime = new BusGPSRealtime();
+						busGPSRealtime.setBusID(timeSpaceIndex.getBusID());
+						busGPSRealtime.setLocation(locationGPS.getLocationGPS());
+						
+						busGPSRealtimes.add(busGPSRealtime);
+						break;
+					}
+				}
+			}
+			
+		}
+		
+		return busGPSRealtimes;
+		
 	}
 }

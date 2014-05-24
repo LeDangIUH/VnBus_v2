@@ -169,6 +169,7 @@ public class BaseDatabaseActivity extends SQLiteOpenHelper {
 				locationGPS = new BusLocationGPS();
 				locationGPS.setBusID(cursor.getString(0));
 				locationGPS.setLocationGPS(cursor.getString(1));
+				locationGPS.setSortNum(cursor.getInt(2));
 				
 				busLocationGPS.add(locationGPS);
 			} while (cursor.moveToNext());

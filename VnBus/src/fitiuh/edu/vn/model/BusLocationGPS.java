@@ -5,6 +5,7 @@ public class BusLocationGPS {
 	
 	private String busID;
 	private String locationGPS;
+	private int sortNum;
 	
 	public String getBusID() {
 		return busID;
@@ -17,5 +18,11 @@ public class BusLocationGPS {
 	}
 	public void setLocationGPS(String locationGPS) {
 		this.locationGPS = locationGPS;
+	}
+	public int getSortNum() {
+		return sortNum;
+	}
+	public void setSortNum(int sortNum) {
+		this.sortNum = sortNum;
 	}
 }

@@ -20,7 +20,7 @@ public class VNB_F_001 extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); 
-        setContentView(R.layout.vnb_001);
+        //setContentView(R.layout.vnb_001);
         
         setUpMapIfNeeded();
     }
