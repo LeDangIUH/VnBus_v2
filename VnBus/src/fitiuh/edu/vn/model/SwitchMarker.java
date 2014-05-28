@@ -117,7 +117,106 @@ public class SwitchMarker {
 			break;
 		}
 		
-		
 		return markerBus;
+	}
+	
+	/**
+	 * 
+	 */
+	
+	public int choosenBusIDInfo(String bID) {
+		
+		BusID id = BusID.valueOf(bID);
+		int busID = 0;
+		
+		switch (id) {
+		case A_01: {
+			busID = 1;
+			break;
+		}
+		case A_02: {
+			busID = 2;
+			break;
+		}
+		case A_03: {
+			busID = 3;
+			break;
+		}
+		case A_04: {
+			busID = 4;
+			break;
+		}
+		case A_05: {
+			busID = 5;
+			break;
+		}
+		case A_06: {
+			busID = 6;
+			break;
+		}
+		case A_07: {
+			busID = 7;
+			break;
+		}
+		case A_08: {
+			busID = 8;
+			break;
+		}
+		case A_09: {
+			busID = 9;
+			break;
+		}
+		case A_10: {
+			busID = 10;
+			break;
+		}
+		
+		case B_01: {
+			busID = 1;
+			break;
+		}
+		case B_02: {
+			busID = 2;
+			break;
+		}
+		case B_03: {
+			busID = 3;
+			break;
+		}
+		case B_04: {
+			busID = 4;
+			break;
+		}
+		case B_05: {
+			busID = 5;
+			break;
+		}
+		case B_06: {
+			busID = 6;
+			break;
+		}
+		case B_07: {
+			busID = 7;
+			break;
+		}
+		case B_08: {
+			busID = 8;
+			break;
+		}
+		case B_09: {
+			busID = 9;
+			break;
+		}
+		case B_10: {
+			busID = 10;
+			break;
+		}
+		
+		default:
+			break;
+		}
+		
+		return busID;
+		
 	}
 }

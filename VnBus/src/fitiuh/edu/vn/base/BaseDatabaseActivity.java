@@ -13,8 +13,10 @@ import fitiuh.edu.vn.common.Common;
 import fitiuh.edu.vn.common.SqlQuery;
 import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
+import fitiuh.edu.vn.model.BusInfo;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
+import fitiuh.edu.vn.model.SwitchMarker;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -32,8 +34,9 @@ public class BaseDatabaseActivity extends SQLiteOpenHelper {
 	private SQLiteDatabase myDataBase;
 
 	private final Context myContext;
-	
 	Common common = new Common();
+	
+	SwitchMarker switchMarker = new SwitchMarker();
 
 	/**
 	 * Constructor Takes and keeps a reference of the passed context in order to
@@ -52,10 +55,22 @@ public class BaseDatabaseActivity extends SQLiteOpenHelper {
 		
 
 		if (dbExist) {
-			common.setBusLocationGPS(getListBusGPS());
-			common.setBusTimes(getListBusTime());
-			common.setBusAllID(getListBusID());
-			common.setBusCountLocations(getcountLocation());
+			
+			if (common.getBusCountLocations() == null) {
+				common.setBusLocationGPS(getListBusGPS());
+			}
+			
+			if (common.getBusTimes() == null) {
+				common.setBusTimes(getListBusTime());
+			}
+			
+			if (common.getBusAllID() == null) {
+				common.setBusAllID(getListBusID());
+			}
+			
+			if (common.getBusCountLocations() == null) {
+				common.setBusCountLocations(getcountLocation());
+			}
 			
 			//Log.e("danglc", "***********************" + getListBusTime().size());
 		} else {
@@ -235,13 +250,47 @@ public class BaseDatabaseActivity extends SQLiteOpenHelper {
 				do {
 					countLocation = new BusCountLocation();
 					countLocation.setBusID(busAllID.getBusID());
-					countLocation.setCountLocation(cursor.getShort(0));
+					countLocation.setCountLocation(cursor.getInt(0));
 					
 					busCountLocations.add(countLocation);
 				}while (cursor.moveToNext());
 			}
 		}
 		return busCountLocations;
+	}
+	
+	public List<BusInfo> getBusInfo(String busID) {
+		
+		List<BusInfo> busInfos = new ArrayList<BusInfo>();
+		BusInfo info = null;
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery("SELECT _id,BusName,ActivityType,Distance,RuningTime,SpacingTime,BusType,Uptime,NTrip,PathLuotDi," +
+									"PathLuotVe FROM BusInfo WHERE _id = " + switchMarker.choosenBusIDInfo(busID) + ";",null);
+		if (cursor.moveToFirst()) {
+			do {
+				
+				info = new BusInfo();
+				
+				info.setBusID(cursor.getInt(0));
+				info.setBusName(cursor.getString(1));
+				info.setActivityType(cursor.getString(2));
+				info.setDistance(cursor.getString(3));
+				info.setRuningTime(cursor.getString(4));
+				info.setSpacingTime(cursor.getString(5));
+				info.setBusType(cursor.getString(6));
+				info.setUpTime(cursor.getString(7));
+				info.setnTrip(cursor.getString(8));
+				info.setPathOutward(cursor.getString(9));
+				info.setPathHomeward(cursor.getString(10));
+				
+				busInfos.add(info);
+				
+			}while (cursor.moveToNext());
+		}
+		
+		return busInfos;
+		
 	}
 	
 

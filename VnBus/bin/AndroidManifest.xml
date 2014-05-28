@@ -50,6 +50,13 @@
         </activity>
         
         <activity android:name="fitiuh.edu.vn.base.BaseMapActivity"></activity>
+        
+        <service
+            android:name="fitiuh.edu.vn.base.BaseServiceActivity"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+        
     </application>
 
 </manifest>

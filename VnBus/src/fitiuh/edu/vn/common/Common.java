@@ -4,6 +4,7 @@ import java.util.List;
 
 import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
+import fitiuh.edu.vn.model.BusGPSRealtime;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
 import fitiuh.edu.vn.model.BusTimeSpace;
@@ -15,12 +16,15 @@ public class Common {
 	public static String TABLE_BUSSTOP = "BusStop";
 	public static String TABLE_BUSTIME = "BusTime";
 	public static String busID;
+	public static int bID;
+	public static String busIDFN001;
 	
 	public static List<BusLocationGPS> busLocationGPS;
 	public static List<BusTime> busTimes;
 	public static List<BusTimeSpace> busTimeSpaces;
 	public static List<BusAllID> busAllID;
 	public static List<BusCountLocation> busCountLocations;
+	public static List<BusGPSRealtime> busGPSRealtimes;
 	
 	public static List<BusLocationGPS> getBusLocationGPS() {
 		return busLocationGPS;
@@ -68,6 +72,30 @@ public class Common {
 
 	public static void setBusCountLocations(List<BusCountLocation> busCountLocations) {
 		Common.busCountLocations = busCountLocations;
+	}
+
+	public static List<BusGPSRealtime> getBusGPSRealtimes() {
+		return busGPSRealtimes;
+	}
+
+	public static void setBusGPSRealtimes(List<BusGPSRealtime> busGPSRealtimes) {
+		Common.busGPSRealtimes = busGPSRealtimes;
+	}
+
+	public static int getbID() {
+		return bID;
+	}
+
+	public static void setbID(int bID) {
+		Common.bID = bID;
+	}
+
+	public static String getBusIDFN001() {
+		return busIDFN001;
+	}
+
+	public static void setBusIDFN001(String busIDFN001) {
+		Common.busIDFN001 = busIDFN001;
 	}
 
 }
