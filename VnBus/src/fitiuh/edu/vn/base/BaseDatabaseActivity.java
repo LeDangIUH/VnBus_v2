@@ -14,9 +14,11 @@ import fitiuh.edu.vn.common.SqlQuery;
 import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
 import fitiuh.edu.vn.model.BusInfo;
+import fitiuh.edu.vn.model.BusLngLat;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
 import fitiuh.edu.vn.model.SwitchMarker;
+import fitiuh.edu.vn.vnbus.FN0001;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -35,6 +37,7 @@ public class BaseDatabaseActivity extends SQLiteOpenHelper {
 
 	private final Context myContext;
 	Common common = new Common();
+	FN0001 fn0001 = new FN0001();
 	
 	SwitchMarker switchMarker = new SwitchMarker();
 
@@ -71,6 +74,7 @@ public class BaseDatabaseActivity extends SQLiteOpenHelper {
 			if (common.getBusCountLocations() == null) {
 				common.setBusCountLocations(getcountLocation());
 			}
+			
 			
 			//Log.e("danglc", "***********************" + getListBusTime().size());
 		} else {
@@ -293,6 +297,44 @@ public class BaseDatabaseActivity extends SQLiteOpenHelper {
 		
 	}
 	
+	public List<BusLngLat> getStartEndPoint(String busID) {
+		
+		List<BusLngLat> busLngLats = new ArrayList<BusLngLat>();
+		BusLngLat lngLat = null;
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		for (BusCountLocation busCountLocation : common.getBusCountLocations()) {
+			if (busID.equals(busCountLocation.getBusID())) {
+				Cursor cursor = db.rawQuery("SELECT Location " +
+											"FROM BusLocation, BusStop " +
+											"WHERE  BusLocation.BusID = '" + busID+ "'" +
+												"AND BusLocation.BusStopID = BusStop._id " +
+												"AND (BusLocation.SortNum = 0 OR BusLocation.SortNum = " + subtractV(busCountLocation.getCountLocation()) + ")" +";", null);
+				if (cursor.moveToFirst()) {
+					do {
+						lngLat = new BusLngLat();
+						
+						lngLat.setLatitude(fn0001.getLatitude(cursor.getString(0)));
+						lngLat.setLongitude(fn0001.getLongitude(cursor.getString(0)));
+						
+						busLngLats.add(lngLat);
+						
+					}while (cursor.moveToNext());
+				}
+			}
+		}
+		
+		
+		return busLngLats;
+	}
+	
+	public int subtractV(int a) {
+		
+		int value = 0;
+		value = a -1;
+		return value;
+	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {

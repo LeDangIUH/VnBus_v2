@@ -2,12 +2,16 @@ package fitiuh.edu.vn.common;
 
 import java.util.List;
 
+import com.google.android.gms.maps.GoogleMap;
+
+import fitiuh.edu.vn.base.BaseMapActivity;
 import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
 import fitiuh.edu.vn.model.BusGPSRealtime;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
 import fitiuh.edu.vn.model.BusTimeSpace;
+import fitiuh.edu.vn.vnbus.R.string;
 
 public class Common {
 	
@@ -18,6 +22,14 @@ public class Common {
 	public static String busID;
 	public static int bID;
 	public static String busIDFN001;
+	public static double latitude;
+	public static double longitude;
+	public static GoogleMap map;
+	private static double latitudeGPS;
+	private static double lonitudeGPS;
+	
+	public String ecodeBus_1 = "uxw`Ac_hjS`T{A~FbAcO~PsCnIrG~FpG|FjIjA~KpOxGrFpHfG|JpIrIvGtPlN~JdJdI|Rv@hEnBrKfBdKdBpJzApIxBrPCpR|AvLb@fN^tIpCrR~AfBc@lSa@xN";
+	
 	
 	public static List<BusLocationGPS> busLocationGPS;
 	public static List<BusTime> busTimes;
@@ -96,6 +108,38 @@ public class Common {
 
 	public static void setBusIDFN001(String busIDFN001) {
 		Common.busIDFN001 = busIDFN001;
+	}
+
+	public static double getLongitude() {
+		return longitude;
+	}
+
+	public static void setLongitude(double longitude) {
+		Common.longitude = longitude;
+	}
+
+	public static double getLatitude() {
+		return latitude;
+	}
+
+	public static void setLatitude(double latitude) {
+		Common.latitude = latitude;
+	}
+
+	public static double getLonitudeGPS() {
+		return lonitudeGPS;
+	}
+
+	public static void setLonitudeGPS(double lonitudeGPS) {
+		Common.lonitudeGPS = lonitudeGPS;
+	}
+
+	public static double getLatitudeGPS() {
+		return latitudeGPS;
+	}
+
+	public static void setLatitudeGPS(double latitudeGPS) {
+		Common.latitudeGPS = latitudeGPS;
 	}
 
 }

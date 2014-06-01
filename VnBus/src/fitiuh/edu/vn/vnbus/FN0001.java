@@ -2,6 +2,7 @@ package fitiuh.edu.vn.vnbus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Dictionary;
 import java.util.List;
 import fitiuh.edu.vn.radialmenu.*;
 
@@ -24,6 +25,7 @@ import fitiuh.edu.vn.common.Common;
 import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
 import fitiuh.edu.vn.model.BusGPSRealtime;
+import fitiuh.edu.vn.model.BusLngLat;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
 import fitiuh.edu.vn.model.BusTimeSpace;
@@ -39,6 +41,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -47,8 +50,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import fitiuh.edu.vn.base.*;
 
 public class FN0001 extends BaseMapActivity {
 	
@@ -64,9 +69,12 @@ public class FN0001 extends BaseMapActivity {
 	List<BusTimeSpace> busTimeSpaces = null;
 	List<BusTimeSpaceIndex> busTimeSpaceIndexs = null;
 	List<BusGPSRealtime> busGPSRealtimes = null;
+	List<BusLngLat> busLngLats = null;
 	
 	SwitchMarker switchMarker = new SwitchMarker();
 	Common common = new Common();
+	DirectionsJSONParser directionsJSONParser = new DirectionsJSONParser();
+	BaseDatabaseActivity baseDatabaseActivity;
 	
 	@Override
 	protected void startDemo() {
@@ -134,6 +142,7 @@ public class FN0001 extends BaseMapActivity {
 		// display loacation realtime into map
 		addMarker(busGPSRealtimes);
 		
+				
 	}
 	
 	@Override
@@ -141,6 +150,7 @@ public class FN0001 extends BaseMapActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
+		//setContentView(R.layout.map);
 	}
 	
 	@Override
@@ -165,10 +175,29 @@ public class FN0001 extends BaseMapActivity {
 	
 	public void addMarker(final List<BusGPSRealtime> busGPSRealtimes) {
 		
+		/*getMap().addMarker(new MarkerOptions()
+		.position(new LatLng(getLatitude("10.77475321,106.7044759"), getLongitude("10.77475321,106.7044759")))
+		.title("A_01")
+		.icon(BitmapDescriptorFactory.fromResource(R.drawable._marker1)));*/
+		
+		/*getMap().addMarker(new MarkerOptions()
+		.position(new LatLng(getLatitude("10.77406813,106.7052054"), getLongitude("10.77406813,106.7052054")))
+		.title("A_02")
+		.icon(BitmapDescriptorFactory.fromResource(R.drawable._marker1)));
+		
 		getMap().addMarker(new MarkerOptions()
-		.position(new LatLng(getLatitude("10.773223266971607,106.70639541003383"), getLongitude("10.773223266971607,106.70639541003383")))
+		.position(new LatLng(getLatitude("10.77324603,106.7060959"), getLongitude("10.77324603,106.7060959")))
 		.title("A_01")
 		.icon(BitmapDescriptorFactory.fromResource(R.drawable._marker1)));
+		
+		getMap().addMarker(new MarkerOptions()
+		.position(new LatLng(getLatitude("10.77308793,106.7046154"), getLongitude("10.77308793,106.7046154")))
+		.title("A_02")
+		.icon(BitmapDescriptorFactory.fromResource(R.drawable._marker1)));*/
+		
+		
+		
+		//checkRoutine();
 		
 		for (BusGPSRealtime gpsRealtime : busGPSRealtimes) {
 			getMap().addMarker(new MarkerOptions()
@@ -185,13 +214,43 @@ public class FN0001 extends BaseMapActivity {
 				
 				//set busID into unil class
 				common.setBusIDFN001(arg0.getTitle());
+				common.setLatitude(arg0.getPosition().latitude);
+				common.setLongitude(arg0.getPosition().longitude);
 				
 				openRadialMenu();
 				return true;
 			}
 		});
 	}
+	
+	public void checkRoutine(){
+		
+		double currentLocationLa = 10.77308793;
+		double currentLocationLo = 106.7046154;
+		
+		double polylinePointLa = 10.77324603;
+		double polylinePointLo = 106.7060959;
+		
+		/*double angle = Math.acos(
+		        (currentLocationLa*polylinePointLa+currentLocationLo+polylinePointLo) / norm(currentLocationLa,currentLocationLo)*norm(polylinePointLa,currentLocationLo));
+		
+		Log.e("==========DangLC", String.valueOf(angle));*/
+		
+		double dLon = (polylinePointLo - currentLocationLo);
 
+	    double y = Math.sin(dLon) * Math.cos(polylinePointLa);
+	    double x = Math.cos(currentLocationLa) * Math.sin(polylinePointLa) - Math.sin(currentLocationLa)
+	            * Math.cos(polylinePointLa) * Math.cos(dLon);
+
+	    double brng = Math.atan2(y, x);
+
+	    brng = Math.toDegrees(brng);
+	    brng = (brng + 360) % 360;
+	    brng = 360 - brng;
+	    
+	    Log.e("==========DangLC", String.valueOf(brng));
+	}
+	
 	//get longitude gps
 	public double getLongitude(String location) {
 
@@ -211,8 +270,7 @@ public class FN0001 extends BaseMapActivity {
 
 		return latitudeBus;
 	}
-
-
+	
 	//convert string to int and second value
 	public int convertTime(String time)
 	{
@@ -432,7 +490,7 @@ public class FN0001 extends BaseMapActivity {
 	      }
 	   }	
 	   
-	   public static class SpaceTimeToYou implements RadialMenuEntry
+	   public class SpaceTimeToYou implements RadialMenuEntry
 	   {
 	      public String getName() { return ""; } 
 		  public String getLabel() { return ""; } 
@@ -441,7 +499,41 @@ public class FN0001 extends BaseMapActivity {
 	      public void menuActiviated()
 	      {
 	    	  
+	    	  baseDatabaseActivity = new BaseDatabaseActivity(FN0001.this);
+	    	  
+	    	  getMap().clear();
+	    	  
+	    	  busLngLats = baseDatabaseActivity.getStartEndPoint(common.getBusIDFN001());
+	    	  
 	    	  ((LinearLayout)PieMenu.getParent()).removeView(PieMenu);
+	    	  
+	    	  //draw line from gps loaction to bus location current
+	    	  getDirection(FN0001.this,common.getLatitude(),common.getLongitude());
+	    	  
+	    	  //draw polyline with bus id is bus location current
+	    	  drawPolyline();
+	    	  
+	    	  //add marker start, end and bus location current
+	    	  //add marker current
+	    	  getMap().addMarker(new MarkerOptions()
+		  		.position(new LatLng(common.getLatitude(),common.getLongitude()))
+		  		.title(common.getBusIDFN001())
+		  		.icon(BitmapDescriptorFactory.fromResource(switchMarker.chooseMarker(common.getBusIDFN001()))));
+	    	  
+	    	  //add marker start and end of direction
+	    	  for (BusLngLat busLL : busLngLats) {
+	    		  getMap().addMarker(new MarkerOptions()
+			  		.position(new LatLng(busLL.getLatitude(),busLL.getLongitude()))
+			  		.title(common.getBusIDFN001())
+			  		.icon(BitmapDescriptorFactory.fromResource(switchMarker.chooseMarker(common.getBusIDFN001()))));
+	    	  }
+	    	  
+	    	  //add marker of gps
+	    	  getMap().addMarker(new MarkerOptions()
+		  		.position(new LatLng(common.getLatitudeGPS(),common.getLonitudeGPS()))
+		  		.title(common.getBusIDFN001())
+		  		.icon(BitmapDescriptorFactory.fromResource(R.drawable.checkloction)));
+	    	  
 	      }
 	   }
 	   
@@ -469,5 +561,17 @@ public class FN0001 extends BaseMapActivity {
 	      {
 	    	  ((LinearLayout)PieMenu.getParent()).removeView(PieMenu);
 	      }
+	   }
+	   
+	   public void drawPolyline() {
+		   
+		   //List<LatLng> latLngs = PolyUtil.decode(common.getBusIDFN001());
+		   List<LatLng> latLngs = directionsJSONParser.decodePoly(common.ecodeBus_1);
+		   getMap().addPolyline(new PolylineOptions()
+		   							.addAll(latLngs)
+		   							.color(Color.RED)
+		   							.width(5));
+		   
+		   
 	   }
 }

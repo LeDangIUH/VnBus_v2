@@ -4,5 +4,6 @@
     <string name="app_name">VnBus</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="colorGPS">#003366</string>
 
 </resources>
