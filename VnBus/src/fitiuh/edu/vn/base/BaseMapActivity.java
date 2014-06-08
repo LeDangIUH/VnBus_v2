@@ -13,15 +13,21 @@ import java.util.List;
 import org.json.JSONObject;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.ui.IconGenerator;
 
 import fitiuh.edu.vn.common.Common;
+import fitiuh.edu.vn.vnbus.FN0001;
 import fitiuh.edu.vn.vnbus.FN0003;
 import fitiuh.edu.vn.vnbus.R;
+import android.R.color;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +43,10 @@ public abstract class BaseMapActivity extends FragmentActivity {
 	private GoogleMap mMap;
 	ArrayList<LatLng> markerPoints;
 	
+	private boolean viewGroupIsVisible = true;  
+    private View mViewGroup;
+    private View mViewGroup2;
+	
 	FN0003 fn0003 = new FN0003();
 	Common common = new Common();
 	
@@ -50,6 +60,11 @@ public abstract class BaseMapActivity extends FragmentActivity {
 		super.onCreate(arg0);
 		//setContentView(R.layout.vnb_001);
 		setContentView(getLayoutId());
+		mViewGroup = findViewById(R.id.layoutDirection);
+		mViewGroup.setVisibility(View.GONE);
+		
+		mViewGroup2 = findViewById(R.id.layoutInfo);
+		mViewGroup2.setVisibility(View.GONE);
 		
 		setUpMapIfNeeded();
 		
@@ -68,6 +83,17 @@ public abstract class BaseMapActivity extends FragmentActivity {
 				common.setLonitudeGPS(longitude);
 				
 				fn0003.addGpsLocationMarker(getMap(), longitude, laitude, getApplicationContext());
+			}
+		});
+		
+		// hide mViewGroup layout
+		getMap().setOnMapClickListener(new OnMapClickListener() {
+			
+			@Override
+			public void onMapClick(LatLng arg0) {
+				// TODO Auto-generated method stub
+				mViewGroup.setVisibility(View.GONE);
+				mViewGroup2.setVisibility(View.GONE);
 			}
 		});
 	}
@@ -100,17 +126,17 @@ public abstract class BaseMapActivity extends FragmentActivity {
      * Map dicrection
      */
     
-    public void getDirection(Context context, double LatCheck, double LongCheck ) {
+    public void getDirection(Context context, double LatCheck1, double LongCheck1, double LatCheck2, double LongCheck2 ) {
 		
-		double latitude = fn0003.getLatitude(context);
-		double longitude = fn0003.getLongitude(context);
-		double la = 10.76988383;
-		double lo = 106.6969872;
+		double latitude = LatCheck1;
+		double longitude = LongCheck1;
+		//double la = 10.76988383;
+		//double lo = 106.6969872;
 		
 		markerPoints = new ArrayList<LatLng>();
 		markerPoints.add(new LatLng(latitude, longitude));
-		markerPoints.add(new LatLng(LatCheck, LongCheck));
-		markerPoints.add(new LatLng(la, lo));
+		markerPoints.add(new LatLng(LatCheck2, LongCheck2));
+		//markerPoints.add(new LatLng(la, lo));
 		
 		LatLng origin = markerPoints.get(0);
 		LatLng dest = markerPoints.get(1);
@@ -247,6 +273,9 @@ public abstract class BaseMapActivity extends FragmentActivity {
 		// Executes in UI thread, after the parsing process
 		@Override
 		protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+			
+			//Intent intent = new Intent(getApplicationContext(), Common.class);
+			
 			ArrayList<LatLng> points = null;
 			PolylineOptions lineOptions = null;
 			MarkerOptions markerOptions = new MarkerOptions();
@@ -289,12 +318,27 @@ public abstract class BaseMapActivity extends FragmentActivity {
 				// Adding all the points in the route to LineOptions
 				lineOptions.addAll(points);
 				lineOptions.width(5);
-				lineOptions.color(Color.GREEN);	
+				lineOptions.color(Color.RED);
 				
 			}
-									
+			
+			
+			//Toast.makeText(getApplicationContext(), distance, Toast.LENGTH_LONG).show();
+			//intent.putExtra("distance", distance);
+			//startActivity(intent);
+			
 			// Drawing polyline in the Google Map for the i-th route
-			mMap.addPolyline(lineOptions);							
-		}			
+			mMap.addPolyline(lineOptions);
+			
+			BaseMapActivity.this.setvalueAAA(distance, duration);			
+		}	
     }
+    
+    public void setvalueAAA(String a, String b){
+    	common.setDirection(a);
+    	common.setTimeDirection(b);
+    }
+    
+    
+    
 }

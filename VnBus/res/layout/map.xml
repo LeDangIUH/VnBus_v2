@@ -9,12 +9,88 @@
           android:layout_height="match_parent"
           android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
+    <RelativeLayout
+        android:id="@+id/layoutDirection"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/red" >
+
+        <ImageView
+            android:id="@+id/imgmyloaction"
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/iconmylocation" />
+
+        <TextView
+            android:layout_alignParentTop="true"
+            android:id="@+id/txtnamelmylocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/imgmyloaction"
+            android:text="TextView" />
+        
+        <ImageView
+            android:id="@+id/imgbus"
+            android:layout_below="@+id/imgmyloaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/iconmylocation" />
+
+        <TextView
+            android:id="@+id/txtbus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imgbus"
+            android:layout_alignLeft="@+id/txtnamelmylocation"
+            android:text="TextView" />
+        
+    </RelativeLayout>
+
     <ImageButton
         android:id="@+id/btnLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="66dp"
         android:src="@drawable/device_access_location_found" />
+
+    <RelativeLayout
+        android:id="@+id/layoutInfo"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@color/red" >
+
+        <TextView
+            android:id="@+id/txtTimeSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="39dp"
+            android:layout_marginTop="5dp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/txtBusName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/txtTimeSpace"
+            android:layout_below="@+id/txtTimeSpace"
+            android:text="TextView" />
+        
+    </RelativeLayout>
 
 </RelativeLayout>

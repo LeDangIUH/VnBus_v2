@@ -335,6 +335,49 @@ public class BaseDatabaseActivity extends SQLiteOpenHelper {
 		value = a -1;
 		return value;
 	}
+	
+	public List<BusLngLat> getLocation(String busID) {
+		
+		List<BusLngLat> busLngLats = new ArrayList<BusLngLat>();
+		BusLngLat lngLat = null;
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		for (BusCountLocation busCountLocation : common.getBusCountLocations()) {
+			if (busID.equals(busCountLocation.getBusID())) {
+				Cursor cursor = db.rawQuery("SELECT Location " +
+											"FROM BusLocation, BusStop " +
+											"WHERE  BusLocation.BusID = '" + busID+ "'" +
+												"AND BusLocation.BusStopID = BusStop._id " + ";", null);
+				if (cursor.moveToFirst()) {
+					do {
+						lngLat = new BusLngLat();
+						
+						lngLat.setLatitude(fn0001.getLatitude(cursor.getString(0)));
+						lngLat.setLongitude(fn0001.getLongitude(cursor.getString(0)));
+						
+						busLngLats.add(lngLat);
+						
+					}while (cursor.moveToNext());
+				}
+			}
+		}
+		return busLngLats;
+	}
+	
+	public String getBusName(int id){
+		
+		String busName = null;	
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery("SELECT BusName FROM BusInfo WHERE _id = "+ id + ";",null);
+		if (cursor.moveToFirst()) {
+			do {
+				busName = cursor.getString(0);
+				
+			}while (cursor.moveToNext());
+		}
+		return busName;
+	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {

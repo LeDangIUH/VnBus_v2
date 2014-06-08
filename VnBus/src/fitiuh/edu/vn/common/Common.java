@@ -2,6 +2,11 @@ package fitiuh.edu.vn.common;
 
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+
 import com.google.android.gms.maps.GoogleMap;
 
 import fitiuh.edu.vn.base.BaseMapActivity;
@@ -11,9 +16,10 @@ import fitiuh.edu.vn.model.BusGPSRealtime;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
 import fitiuh.edu.vn.model.BusTimeSpace;
+import fitiuh.edu.vn.vnbus.FN0001;
 import fitiuh.edu.vn.vnbus.R.string;
 
-public class Common {
+public class Common extends Activity {
 	
 	public static String DB_NAME = "DB_VnBus";
 	public static String TABLE_BUSLOCATION = "BusLocation";
@@ -27,6 +33,10 @@ public class Common {
 	public static GoogleMap map;
 	private static double latitudeGPS;
 	private static double lonitudeGPS;
+	public static String direction;
+	private static String timeDirection;
+	public static int colorPolyline ;
+	public static int flag;
 	
 	public String ecodeBus_1 = "uxw`Ac_hjS`T{A~FbAcO~PsCnIrG~FpG|FjIjA~KpOxGrFpHfG|JpIrIvGtPlN~JdJdI|Rv@hEnBrKfBdKdBpJzApIxBrPCpR|AvLb@fN^tIpCrR~AfBc@lSa@xN";
 	
@@ -142,4 +152,35 @@ public class Common {
 		Common.latitudeGPS = latitudeGPS;
 	}
 
+	public static String getDirection() {
+		return direction;
+	}
+
+	public static void setDirection(String direction) {
+		Common.direction = direction;
+	}
+
+	public static int getColorPolyline() {
+		return colorPolyline;
+	}
+
+	public static void setColorPolyline(int colorPolyline) {
+		Common.colorPolyline = colorPolyline;
+	}
+
+	public static int getFlag() {
+		return flag;
+	}
+
+	public static void setFlag(int flag) {
+		Common.flag = flag;
+	}
+
+	public static String getTimeDirection() {
+		return timeDirection;
+	}
+
+	public static void setTimeDirection(String timeDirection) {
+		Common.timeDirection = timeDirection;
+	}
 }
