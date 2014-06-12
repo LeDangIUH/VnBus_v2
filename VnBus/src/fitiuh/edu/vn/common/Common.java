@@ -3,6 +3,7 @@ package fitiuh.edu.vn.common;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import fitiuh.edu.vn.base.BaseMapActivity;
 import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
 import fitiuh.edu.vn.model.BusGPSRealtime;
+import fitiuh.edu.vn.model.BusLngLat;
+import fitiuh.edu.vn.model.BusLngLatAddress;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
 import fitiuh.edu.vn.model.BusTimeSpace;
@@ -37,6 +40,7 @@ public class Common extends Activity {
 	private static String timeDirection;
 	public static int colorPolyline ;
 	public static int flag;
+	private static Context context;
 	
 	public String ecodeBus_1 = "uxw`Ac_hjS`T{A~FbAcO~PsCnIrG~FpG|FjIjA~KpOxGrFpHfG|JpIrIvGtPlN~JdJdI|Rv@hEnBrKfBdKdBpJzApIxBrPCpR|AvLb@fN^tIpCrR~AfBc@lSa@xN";
 	
@@ -47,6 +51,8 @@ public class Common extends Activity {
 	public static List<BusAllID> busAllID;
 	public static List<BusCountLocation> busCountLocations;
 	public static List<BusGPSRealtime> busGPSRealtimes;
+	public static List<BusLngLat> busLngLats = null;
+	public static List<BusLngLatAddress> busLngLatAddresses = null;
 	
 	public static List<BusLocationGPS> getBusLocationGPS() {
 		return busLocationGPS;
@@ -182,5 +188,37 @@ public class Common extends Activity {
 
 	public static void setTimeDirection(String timeDirection) {
 		Common.timeDirection = timeDirection;
+	}
+
+	public static List<BusLngLat> getBusLngLats() {
+		return busLngLats;
+	}
+
+	public static void setBusLngLats(List<BusLngLat> busLngLats) {
+		Common.busLngLats = busLngLats;
+	}
+
+	public static GoogleMap getMap() {
+		return map;
+	}
+
+	public static void setMap(GoogleMap map) {
+		Common.map = map;
+	}
+
+	public static Context getContext() {
+		return context;
+	}
+
+	public static void setContext(Context context) {
+		Common.context = context;
+	}
+
+	public static List<BusLngLatAddress> getBusLngLatAddresses() {
+		return busLngLatAddresses;
+	}
+
+	public static void setBusLngLatAddresses(List<BusLngLatAddress> busLngLatAddresses) {
+		Common.busLngLatAddresses = busLngLatAddresses;
 	}
 }

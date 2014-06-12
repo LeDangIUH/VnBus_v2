@@ -6,6 +6,7 @@ import java.util.Dictionary;
 import java.util.List;
 import fitiuh.edu.vn.radialmenu.*;
 
+import com.google.android.gms.internal.gt;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
@@ -27,6 +28,7 @@ import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
 import fitiuh.edu.vn.model.BusGPSRealtime;
 import fitiuh.edu.vn.model.BusLngLat;
+import fitiuh.edu.vn.model.BusLngLatAddress;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
 import fitiuh.edu.vn.model.BusTimeSpace;
@@ -581,7 +583,7 @@ public class FN0001 extends BaseMapActivity {
 	      }
 	   }
 	   
-	   public static class DemoTrip implements RadialMenuEntry
+	   public class DemoTrip implements RadialMenuEntry
 	   {
 	      public String getName() { return ""; } 
 		  public String getLabel() { return ""; } 
@@ -590,7 +592,23 @@ public class FN0001 extends BaseMapActivity {
 	      public void menuActiviated()
 	      {
 	    	  
+	    	  List<BusLngLat> busLngLats = null;
+	    	  List<BusLngLatAddress> busLngLatAddresses = null;
+	    	  String busID = common.getBusIDFN001();
+	    	  baseDatabaseActivity = new BaseDatabaseActivity(FN0001.this);
+	    	  
 	    	  ((LinearLayout)PieMenu.getParent()).removeView(PieMenu);
+	    	  
+	    	  busLngLats = baseDatabaseActivity.getLocation(busID);
+	    	  common.setBusLngLats(busLngLats);
+	    	  common.setMap(getMap());
+	    	  common.setContext(FN0001.this);
+	    	  
+	    	  busLngLatAddresses = baseDatabaseActivity.getLocationAddress(busID);
+	    	  common.setBusLngLatAddresses(busLngLatAddresses);
+	    	  
+	    	  new FN0004().animationMarker();
+			  
 	    	  
 	      }
 	   }

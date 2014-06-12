@@ -15,6 +15,7 @@ import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
 import fitiuh.edu.vn.model.BusInfo;
 import fitiuh.edu.vn.model.BusLngLat;
+import fitiuh.edu.vn.model.BusLngLatAddress;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
 import fitiuh.edu.vn.model.SwitchMarker;
@@ -377,6 +378,36 @@ public class BaseDatabaseActivity extends SQLiteOpenHelper {
 			}while (cursor.moveToNext());
 		}
 		return busName;
+	}
+	
+	public List<BusLngLatAddress> getLocationAddress(String busID) {
+		
+		List<BusLngLatAddress> busLngLatAddresses = new ArrayList<BusLngLatAddress>();
+		BusLngLatAddress lngLatAddress = null;
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		for (BusCountLocation busCountLocation : common.getBusCountLocations()) {
+			if (busID.equals(busCountLocation.getBusID())) {
+				Cursor cursor = db.rawQuery("SELECT Address, Location " +
+											"FROM BusLocation, BusStop " +
+											"WHERE  BusLocation.BusID = '" + busID+ "'" +
+												"AND BusLocation.BusStopID = BusStop._id " + ";", null);
+				if (cursor.moveToFirst()) {
+					do {
+						
+						lngLatAddress = new BusLngLatAddress();
+
+						lngLatAddress.setBusAddress(cursor.getString(0));
+						lngLatAddress.setLocation(cursor.getString(1));
+						
+						busLngLatAddresses.add(lngLatAddress);
+						
+					}while (cursor.moveToNext());
+				}
+			}
+		}
+		return busLngLatAddresses;
 	}
 
 	@Override
