@@ -613,7 +613,7 @@ public class FN0001 extends BaseMapActivity {
 	      }
 	   }
 	   
-	   public static class SocialNetwork implements RadialMenuEntry
+	   public class SocialNetwork implements RadialMenuEntry
 	   {
 	      public String getName() { return ""; } 
 		  public String getLabel() { return ""; } 
@@ -622,6 +622,9 @@ public class FN0001 extends BaseMapActivity {
 	      public void menuActiviated()
 	      {
 	    	  ((LinearLayout)PieMenu.getParent()).removeView(PieMenu);
+	    	  
+	    	  Intent intent = new Intent(FN0001.this, FN0005.class);
+	    	  startActivity(intent);
 	      }
 	   }
 	   
@@ -631,7 +634,7 @@ public class FN0001 extends BaseMapActivity {
 		   List<LatLng> latLngs = directionsJSONParser.decodePoly(common.ecodeBus_1);
 		   getMap().addPolyline(new PolylineOptions()
 		   							.addAll(latLngs)
-		   							.color(Color.RED)
+		   							.color(Color.GREEN)
 		   							.width(5));
 		   /*common.setFlag(2);
 		   
