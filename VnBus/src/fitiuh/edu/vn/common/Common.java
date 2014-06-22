@@ -1,26 +1,19 @@
 package fitiuh.edu.vn.common;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-
 import com.google.android.gms.maps.GoogleMap;
-
-import fitiuh.edu.vn.base.BaseMapActivity;
 import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
+import fitiuh.edu.vn.model.BusFilter;
 import fitiuh.edu.vn.model.BusGPSRealtime;
 import fitiuh.edu.vn.model.BusLngLat;
 import fitiuh.edu.vn.model.BusLngLatAddress;
 import fitiuh.edu.vn.model.BusLocationGPS;
 import fitiuh.edu.vn.model.BusTime;
 import fitiuh.edu.vn.model.BusTimeSpace;
-import fitiuh.edu.vn.vnbus.FN0001;
-import fitiuh.edu.vn.vnbus.R.string;
 
 public class Common extends Activity {
 	
@@ -44,7 +37,7 @@ public class Common extends Activity {
 	
 	public String ecodeBus_1 = "uxw`Ac_hjS`T{A~FbAcO~PsCnIrG~FpG|FjIjA~KpOxGrFpHfG|JpIrIvGtPlN~JdJdI|Rv@hEnBrKfBdKdBpJzApIxBrPCpR|AvLb@fN^tIpCrR~AfBc@lSa@xN";
 	
-	
+
 	public static List<BusLocationGPS> busLocationGPS;
 	public static List<BusTime> busTimes;
 	public static List<BusTimeSpace> busTimeSpaces;
@@ -53,6 +46,8 @@ public class Common extends Activity {
 	public static List<BusGPSRealtime> busGPSRealtimes;
 	public static List<BusLngLat> busLngLats = null;
 	public static List<BusLngLatAddress> busLngLatAddresses = null;
+	
+	private static List<BusFilter> busFilters = null;
 	
 	public static List<BusLocationGPS> getBusLocationGPS() {
 		return busLocationGPS;
@@ -221,4 +216,26 @@ public class Common extends Activity {
 	public static void setBusLngLatAddresses(List<BusLngLatAddress> busLngLatAddresses) {
 		Common.busLngLatAddresses = busLngLatAddresses;
 	}
+
+	public static List<BusFilter> getBusFilters() {
+		
+		List<BusFilter> busFilters = new ArrayList<BusFilter>();
+		BusFilter filter = null;
+		
+		for (int i = 1; i <=152 ; i++) {
+			filter = new BusFilter();
+			filter.setCode(String.valueOf(i));
+			filter.setSelected(true);
+			
+			busFilters.add(filter);
+		}
+		
+		return busFilters;
+		
+	}
+
+	public static void setBusFilters(List<BusFilter> busFilters) {
+		Common.busFilters = busFilters;
+	}
+
 }

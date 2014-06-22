@@ -17,7 +17,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="250dp"
         android:background="@color/red" >
 
         <ImageView
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="350dp"
         android:src="@drawable/device_access_location_found" />
 
     <RelativeLayout
@@ -91,6 +91,53 @@
             android:layout_below="@+id/txtTimeSpace"
             android:text="TextView" />
         
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loutRight"
+        android:layout_width="45dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/loutLeft"
+        android:layout_marginRight="10dp"
+        android:background="@color/black" >
+        <ImageButton
+            android:id="@+id/btnRestart"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/navigation_refresh" />
+        <ImageButton
+            android:id="@+id/btnLocation"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/navigation_refresh" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loutLeft"
+        android:layout_width="45dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/black" >
+
+        <ImageButton
+            android:id="@+id/btnFilter"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/icon_filter" />
+
     </RelativeLayout>
 
 </RelativeLayout>

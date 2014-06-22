@@ -164,6 +164,7 @@ containing a value of this type.
         public static final int zOrderOnTop=0x7f010010;
     }
     public static final class color {
+        public static final int black=0x7f04000b;
         public static final int common_action_bar_splitter=0x7f040009;
         /**  Sign-in Button Colors 
          */
@@ -176,8 +177,8 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f040006;
         public static final int common_signin_btn_light_text_focused=0x7f040007;
         public static final int common_signin_btn_light_text_pressed=0x7f040005;
-        public static final int common_signin_btn_text_dark=0x7f04000b;
-        public static final int common_signin_btn_text_light=0x7f04000c;
+        public static final int common_signin_btn_text_dark=0x7f04000c;
+        public static final int common_signin_btn_text_light=0x7f04000d;
         public static final int red=0x7f04000a;
     }
     public static final class dimen {
@@ -237,41 +238,53 @@ containing a value of this type.
         public static final int ic_plusone_small_off_client=0x7f02002b;
         public static final int ic_plusone_standard_off_client=0x7f02002c;
         public static final int ic_plusone_tall_off_client=0x7f02002d;
-        public static final int iconmylocation=0x7f02002e;
-        public static final int social_person=0x7f02002f;
-        public static final int social_share=0x7f020030;
+        public static final int icon_filter=0x7f02002e;
+        public static final int iconmylocation=0x7f02002f;
+        public static final int navigation_refresh=0x7f020030;
+        public static final int social_person=0x7f020031;
+        public static final int social_share=0x7f020032;
     }
     public static final class id {
         public static final int VNBUS_MAP=0x7f050005;
-        public static final int action_settings=0x7f050014;
-        public static final int btnLocation=0x7f050010;
-        public static final int button1=0x7f050009;
-        public static final int editText1=0x7f050008;
+        public static final int action_settings=0x7f05001c;
+        public static final int btnFilter=0x7f05001b;
+        public static final int btnLocation=0x7f050014;
+        public static final int btnRestart=0x7f05001a;
+        public static final int button1=0x7f05000d;
+        public static final int cbChoose=0x7f050008;
+        public static final int code=0x7f050009;
+        public static final int editText1=0x7f05000c;
+        public static final int findSelected=0x7f050007;
         public static final int hybrid=0x7f050004;
-        public static final int imageView1=0x7f050007;
-        public static final int imgbus=0x7f05000e;
-        public static final int imgmyloaction=0x7f05000c;
-        public static final int layoutDirection=0x7f05000b;
-        public static final int layoutInfo=0x7f050011;
-        public static final int map=0x7f05000a;
+        public static final int imageView1=0x7f05000b;
+        public static final int imgbus=0x7f050012;
+        public static final int imgmyloaction=0x7f050010;
+        public static final int layoutDirection=0x7f05000f;
+        public static final int layoutInfo=0x7f050015;
+        public static final int loutLeft=0x7f050019;
+        public static final int loutRight=0x7f050018;
+        public static final int lvCheckbox=0x7f050006;
+        public static final int map=0x7f05000e;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;
-        public static final int txtBusInfo=0x7f050006;
-        public static final int txtBusName=0x7f050013;
-        public static final int txtTimeSpace=0x7f050012;
-        public static final int txtbus=0x7f05000f;
-        public static final int txtnamelmylocation=0x7f05000d;
+        public static final int txtBusInfo=0x7f05000a;
+        public static final int txtBusName=0x7f050017;
+        public static final int txtTimeSpace=0x7f050016;
+        public static final int txtbus=0x7f050013;
+        public static final int txtnamelmylocation=0x7f050011;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
     }
     public static final class layout {
         public static final int fn0001=0x7f030000;
-        public static final int fn0002=0x7f030001;
-        public static final int fn0005=0x7f030002;
-        public static final int map=0x7f030003;
+        public static final int fn0001_filter=0x7f030001;
+        public static final int fn0001_filter_checkbox=0x7f030002;
+        public static final int fn0002=0x7f030003;
+        public static final int fn0005=0x7f030004;
+        public static final int map=0x7f030005;
     }
     public static final class menu {
         public static final int main=0x7f0a0000;
@@ -401,9 +414,10 @@ containing a value of this type.
          */
         public static final int AppBaseTheme=0x7f090000;
         /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f090001;
+        public static final int MenuFunction=0x7f090002;
+        public static final int TitleTextStyle=0x7f090003;
     }
     public static final class styleable {
         /** Attributes that can be used with a AdsAttrs.

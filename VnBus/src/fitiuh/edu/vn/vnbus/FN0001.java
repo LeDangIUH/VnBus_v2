@@ -26,6 +26,7 @@ import fitiuh.edu.vn.base.BaseServiceActivity;
 import fitiuh.edu.vn.common.Common;
 import fitiuh.edu.vn.model.BusAllID;
 import fitiuh.edu.vn.model.BusCountLocation;
+import fitiuh.edu.vn.model.BusFilter;
 import fitiuh.edu.vn.model.BusGPSRealtime;
 import fitiuh.edu.vn.model.BusLngLat;
 import fitiuh.edu.vn.model.BusLngLatAddress;
@@ -142,6 +143,8 @@ public class FN0001 extends BaseMapActivity {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		common.setContext(FN0001.this);
+		
 		busLocationGPSs = Common.getBusLocationGPS();
 		busTimes = Common.getBusTimes();
 		busAllIDs = Common.getBusAllID();
@@ -152,6 +155,7 @@ public class FN0001 extends BaseMapActivity {
 		// get location realtime auto
 		busGPSRealtimes = getLocationRealtime(busTimeSpaceIndexs,
 				busLocationGPSs);
+		common.setBusGPSRealtimes(busGPSRealtimes);
 		// display loacation realtime into map
 		addMarker(busGPSRealtimes);
 		
@@ -187,44 +191,26 @@ public class FN0001 extends BaseMapActivity {
 	}
 	
 	public void addMarker(final List<BusGPSRealtime> busGPSRealtimes) {
-		
-		getMap().addMarker(new MarkerOptions()
-		.position(new LatLng(getLatitude("10.77475321,106.7044759"), getLongitude("10.77475321,106.7044759")))
-		.title("A_01")
-		.icon(BitmapDescriptorFactory.fromResource(R.drawable._marker1)));
-		
-		/*getMap().addMarker(new MarkerOptions()
-		.position(new LatLng(getLatitude("10.77406813,106.7052054"), getLongitude("10.77406813,106.7052054")))
-		.title("A_02")
-		.icon(BitmapDescriptorFactory.fromResource(R.drawable._marker1)));
-		
-		getMap().addMarker(new MarkerOptions()
-		.position(new LatLng(getLatitude("10.77324603,106.7060959"), getLongitude("10.77324603,106.7060959")))
-		.title("A_01")
-		.icon(BitmapDescriptorFactory.fromResource(R.drawable._marker1)));
-		
-		getMap().addMarker(new MarkerOptions()
-		.position(new LatLng(getLatitude("10.77308793,106.7046154"), getLongitude("10.77308793,106.7046154")))
-		.title("A_02")
-		.icon(BitmapDescriptorFactory.fromResource(R.drawable._marker1)));*/
-		
-		
-		
+				
 		//checkRoutine();
+		List<BusFilter> busFilters = common.getBusFilters();
 		
 		for (BusGPSRealtime gpsRealtime : busGPSRealtimes) {
-			getMap().addMarker(new MarkerOptions()
+			for (BusFilter busF : busFilters) {
+				if (busF.getCode().equals(String.valueOf(switchMarker.choosenBusIDInfo(gpsRealtime.getBusID())))) {
+					getMap().addMarker(new MarkerOptions()
 					.position(new LatLng(getLatitude(gpsRealtime.getLocation()), getLongitude(gpsRealtime.getLocation())))
 					.title(gpsRealtime.getBusID())
 					.icon(BitmapDescriptorFactory.fromResource(switchMarker.chooseMarker(gpsRealtime.getBusID()))));
+				}
+			}			
 		}
 		
 		//event for click on marker
 		getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
 			@Override
 			public boolean onMarkerClick(Marker arg0) {
-				// TODO Auto-generated method stub		
-				
+			
 				//set busID into unil class
 				common.setBusIDFN001(arg0.getTitle());
 				common.setLatitude(arg0.getPosition().latitude);

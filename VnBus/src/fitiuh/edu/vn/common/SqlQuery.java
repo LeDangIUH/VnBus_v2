@@ -1,6 +1,10 @@
 package fitiuh.edu.vn.common;
 
-import fitiuh.edu.vn.model.SwitchMarker;
+import java.util.ArrayList;
+import java.util.List;
+
+import fitiuh.edu.vn.model.BusFilter;
+
 
 public class SqlQuery {
 	

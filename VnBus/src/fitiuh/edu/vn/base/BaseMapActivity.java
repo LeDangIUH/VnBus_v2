@@ -20,23 +20,37 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.ui.IconGenerator;
-
 import fitiuh.edu.vn.common.Common;
+import fitiuh.edu.vn.model.BusFilter;
+import fitiuh.edu.vn.model.BusGPSRealtime;
+import fitiuh.edu.vn.model.SwitchMarker;
 import fitiuh.edu.vn.vnbus.FN0001;
 import fitiuh.edu.vn.vnbus.FN0003;
 import fitiuh.edu.vn.vnbus.R;
 import android.R.color;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public abstract class BaseMapActivity extends FragmentActivity {
 	
@@ -46,9 +60,14 @@ public abstract class BaseMapActivity extends FragmentActivity {
 	private boolean viewGroupIsVisible = true;  
     private View mViewGroup;
     private View mViewGroup2;
+    private View mViewLeft;
+    private View mViewRight;
 	
 	FN0003 fn0003 = new FN0003();
+	//FN0001 fn0001 = new FN0001();
 	Common common = new Common();
+	Dialog dialog;
+	MyCustomAdapter dataAdapter = null;
 	
 	protected int getLayoutId() {
         return R.layout.map;
@@ -65,6 +84,9 @@ public abstract class BaseMapActivity extends FragmentActivity {
 		
 		mViewGroup2 = findViewById(R.id.layoutInfo);
 		mViewGroup2.setVisibility(View.GONE);
+		
+		mViewLeft = findViewById(R.id.loutLeft);
+		mViewRight = findViewById(R.id.loutRight);
 		
 		setUpMapIfNeeded();
 		
@@ -85,6 +107,19 @@ public abstract class BaseMapActivity extends FragmentActivity {
 				fn0003.addGpsLocationMarker(getMap(), longitude, laitude, getApplicationContext());
 			}
 		});
+		
+		//event for image filter click
+		ImageButton imageButtonFilter = (ImageButton) findViewById(R.id.btnFilter);
+		imageButtonFilter.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				displayListViewdialog();
+			}
+		});
+		
+		// 
 		
 		// hide mViewGroup layout
 		getMap().setOnMapClickListener(new OnMapClickListener() {
@@ -338,7 +373,186 @@ public abstract class BaseMapActivity extends FragmentActivity {
     	common.setDirection(a);
     	common.setTimeDirection(b);
     }
+     
+    //display dialog choose bus number display
+    public void displayListViewdialog() {
+
+		final Dialog dialog = new Dialog(common.getContext());
+        dialog.setContentView(R.layout.fn0001_filter);
+        dialog.setCancelable(true);
+        dialog.setTitle("Hiển thị buýt");
+        
+        List<BusFilter> busFilters = common.getBusFilters();
+			
+		// Array list of countries
+		ArrayList<BusFilter> stateList = new ArrayList<BusFilter>();
+
+		BusFilter busFilter = null;
+		for (BusFilter filter : busFilters) {
+			busFilter = new BusFilter();
+			busFilter.setCode(filter.getCode());
+			busFilter.setSelected(false);
+			
+			stateList.add(busFilter);
+		}
+
+		// create an ArrayAdaptar from the String Array
+		dataAdapter = new MyCustomAdapter(common.getContext(), R.layout.fn0001_filter_checkbox, stateList);
+		ListView listView = (ListView)dialog.findViewById(R.id.lvCheckbox);
+		// Assign adapter to ListView
+		listView.setAdapter(dataAdapter);
+
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// When clicked, show a toast with the TextView text
+				BusFilter state = (BusFilter) parent.getItemAtPosition(position);
+				/*Toast.makeText(getApplicationContext(),
+						"Clicked on : " + state.getCode(), Toast.LENGTH_LONG)
+						.show()*/;
+			}
+		});
+		
+		Button button = (Button) dialog.findViewById(R.id.findSelected);
+		button.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				List<BusFilter> busFilters = new ArrayList<BusFilter>();
+				BusFilter filter = null;
+				
+				//StringBuffer responseText = new StringBuffer();
+				
+				ArrayList<BusFilter> stateList = dataAdapter.stateList;
+
+				for (int i = 0; i < stateList.size(); i++) {
+					BusFilter state = stateList.get(i);
+
+					if (state.isSelected()) {
+						
+						filter = new BusFilter();
+						filter.setCode(state.getCode());
+						filter.setSelected(true);
+						//responseText.append("\n" + state.getCode());
+						
+						busFilters.add(filter);
+					}
+				}
+
+				/*Toast.makeText(getApplicationContext(), responseText,
+						Toast.LENGTH_LONG).show();*/
+				common.setBusFilters(busFilters);
+				dialog.dismiss();
+				getMap().clear();
+				
+				List<BusFilter> busFilt = common.getBusFilters();
+				List<BusGPSRealtime> busGPSRealtimes = common.getBusGPSRealtimes();
+				SwitchMarker switchMarker = new SwitchMarker();
+				
+				for (BusGPSRealtime gpsRealtime : busGPSRealtimes) {
+					for (BusFilter busF : busFilters) {
+						if (busF.getCode().equals(String.valueOf(switchMarker.choosenBusIDInfo(gpsRealtime.getBusID())))) {
+							getMap().addMarker(new MarkerOptions()
+							.position(new LatLng(getLatitude(gpsRealtime.getLocation()), getLongitude(gpsRealtime.getLocation())))
+							.title(gpsRealtime.getBusID())
+							.icon(BitmapDescriptorFactory.fromResource(switchMarker.chooseMarker(gpsRealtime.getBusID()))));
+						}
+					}			
+				}
+			}
+		});
+		
+		dialog.show();
+	}
     
-    
-    
+  //get longitude gps
+  	public double getLongitude(String location) {
+
+  		double longitudeBus = 0.0;
+  		String[] aLocation = location.trim().split(",");
+  		longitudeBus = Double.parseDouble(aLocation[1]);
+
+  		return longitudeBus;
+  	}
+
+  	//get latitude gps
+  	public double getLatitude(String location) {
+
+  		double latitudeBus = 0.0;
+  		String[] aLocation = location.trim().split(",");
+  		latitudeBus = Double.parseDouble(aLocation[0]);
+
+  		return latitudeBus;
+  	}
+	
+	private class MyCustomAdapter extends ArrayAdapter<BusFilter> {
+
+		private ArrayList<BusFilter> stateList;
+
+		public MyCustomAdapter(Context context, int textViewResourceId,
+
+		ArrayList<BusFilter> stateList) {
+			super(context, textViewResourceId, stateList);
+			this.stateList = new ArrayList<BusFilter>();
+			this.stateList.addAll(stateList);
+		}
+
+		private class ViewHolder {
+			TextView code;
+			CheckBox name;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			ViewHolder holder = null;
+
+			Log.v("ConvertView", String.valueOf(position));
+
+			if (convertView == null) {
+
+				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+				convertView = vi.inflate(R.layout.fn0001_filter_checkbox, null);
+
+				holder = new ViewHolder();
+				holder.code = (TextView) convertView.findViewById(R.id.code);
+				holder.name = (CheckBox) convertView
+						.findViewById(R.id.cbChoose);
+
+				convertView.setTag(holder);
+
+				holder.name.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						CheckBox cb = (CheckBox) v;
+						BusFilter _state = (BusFilter) cb.getTag();
+
+						/*Toast.makeText(
+								common.getContext(),
+								"Checkbox: " + cb.getText() + " -> "
+										+ cb.isChecked(), Toast.LENGTH_LONG)
+								.show();*/
+
+						_state.setSelected(cb.isChecked());
+					}
+				});
+
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+
+			BusFilter state = stateList.get(position);
+
+			holder.code.setText(state.getCode());
+			holder.name.setChecked(state.isSelected());
+
+			holder.name.setTag(state);
+
+			return convertView;
+		}
+
+	}
+	    
 }
