@@ -15,81 +15,104 @@
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="250dp"
-        android:background="@color/red" >
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white" >
 
         <ImageView
-            android:id="@+id/imgmyloaction"
-            android:layout_alignParentTop="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/imgBus"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/iconmylocation" />
+            android:src="@drawable/ic_bus" />
 
         <TextView
-            android:layout_alignParentTop="true"
+            android:id="@+id/txtlable1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imgBus"
+            android:layout_marginLeft="13dp"
+            android:layout_toRightOf="@+id/imgBus"
+            android:text="Điểm bắt đầu: "
+            android:textColor="@color/gray"/>
+
+        <TextView
+            android:id="@+id/txtlable2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imgBus"
+            android:layout_alignLeft="@+id/txtlable1"
+            android:text="Điểm kết thúc: "
+            android:textColor="@color/gray" />
+
+        <TextView
             android:id="@+id/txtnamelmylocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@+id/imgmyloaction"
-            android:text="TextView" />
-        
-        <ImageView
-            android:id="@+id/imgbus"
-            android:layout_below="@+id/imgmyloaction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:src="@drawable/iconmylocation" />
+            android:layout_alignBaseline="@+id/txtlable1"
+            android:layout_alignBottom="@+id/txtlable1"
+            android:layout_marginLeft="19dp"
+            android:layout_toRightOf="@+id/txtlable2"
+            android:text="TextView"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/txtbus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/imgbus"
+            android:layout_alignBaseline="@+id/txtlable2"
+            android:layout_alignBottom="@+id/txtlable2"
             android:layout_alignLeft="@+id/txtnamelmylocation"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textColor="@color/black"  />
         
     </RelativeLayout>
-
-    <ImageButton
-        android:id="@+id/btnLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="350dp"
-        android:src="@drawable/device_access_location_found" />
 
     <RelativeLayout
         android:id="@+id/layoutInfo"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="90dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@color/red" >
+        android:background="@color/white" >
 
         <TextView
-            android:id="@+id/txtTimeSpace"
+            android:id="@+id/txtTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="39dp"
-            android:layout_marginTop="5dp"
-            android:text="TextView" />
+            android:layout_marginLeft="17dp"
+            android:layout_marginTop="11dp"
+            android:text="Khoảng thời gian chờ" />
 
         <TextView
             android:id="@+id/txtBusName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/txtTime"
+            android:layout_below="@+id/txtTime"
+            android:layout_marginTop="21dp"
+            android:text="Tên tuyến buýt" />
+
+        <TextView
+            android:id="@+id/txtTimeSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/txtBusName"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="32dp"
+            android:text="Thời gian chờ" />
+
+        <TextView
+            android:id="@+id/txtRouterSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txtBusName"
             android:layout_alignLeft="@+id/txtTimeSpace"
-            android:layout_below="@+id/txtTimeSpace"
-            android:text="TextView" />
+            android:text="Khoảng cách" />
         
     </RelativeLayout>
 
@@ -110,7 +133,7 @@
             android:layout_marginTop="4dp"
             android:src="@drawable/navigation_refresh" />
         <ImageButton
-            android:id="@+id/btnLocation"
+            android:id="@+id/btnGps"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_alignParentLeft="true"

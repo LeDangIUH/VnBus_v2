@@ -1,7 +1,10 @@
 package fitiuh.edu.vn.vnbus;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.List;
 import fitiuh.edu.vn.radialmenu.*;
@@ -48,6 +51,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -85,10 +89,15 @@ public class FN0001 extends BaseMapActivity {
 	
 	private View mViewGroup;
 	private View mViewGroup2;
+	private View mViewLeft;
+    private View mViewRight;
+	
 	private TextView txtMyLocation;
 	private TextView txtbus;
 	private TextView txtTimeSpace;
-	private TextView txtBusName;	
+	private TextView txtBusName;
+	private TextView txtTime;
+	private TextView txtRouterSpace;
 	
 	@Override
 	protected void startDemo() {
@@ -222,33 +231,6 @@ public class FN0001 extends BaseMapActivity {
 		});
 	}
 	
-	public void checkRoutine(){
-		
-		double currentLocationLa = 10.77308793;
-		double currentLocationLo = 106.7046154;
-		
-		double polylinePointLa = 10.77324603;
-		double polylinePointLo = 106.7060959;
-		
-		/*double angle = Math.acos(
-		        (currentLocationLa*polylinePointLa+currentLocationLo+polylinePointLo) / norm(currentLocationLa,currentLocationLo)*norm(polylinePointLa,currentLocationLo));
-		
-		Log.e("==========DangLC", String.valueOf(angle));*/
-		
-		double dLon = (polylinePointLo - currentLocationLo);
-
-	    double y = Math.sin(dLon) * Math.cos(polylinePointLa);
-	    double x = Math.cos(currentLocationLa) * Math.sin(polylinePointLa) - Math.sin(currentLocationLa)
-	            * Math.cos(polylinePointLa) * Math.cos(dLon);
-
-	    double brng = Math.atan2(y, x);
-
-	    brng = Math.toDegrees(brng);
-	    brng = (brng + 360) % 360;
-	    brng = 360 - brng;
-	    
-	    Log.e("==========DangLC", String.valueOf(brng));
-	}
 	
 	//get longitude gps
 	public double getLongitude(String location) {
@@ -345,6 +327,16 @@ public class FN0001 extends BaseMapActivity {
 	            .append(addValueTime(c.get(Calendar.MINUTE))).append(":")
 	            .append(addValueTime(c.get(Calendar.SECOND))).append(" ")).toString();
 	}
+	
+	//Time format HH:MM
+		public String getCurrentTimeNotSS() {
+
+		    final Calendar c = Calendar.getInstance();
+
+		    return(new StringBuilder()
+		            .append(addValueTime(c.get(Calendar.HOUR_OF_DAY))).append(":")
+		            .append(addValueTime(c.get(Calendar.MINUTE)))).toString();
+		}
 
 	//get time
 	public int getTimeNow() {
@@ -553,21 +545,65 @@ public class FN0001 extends BaseMapActivity {
 	    			mViewGroup2 = findViewById(R.id.layoutInfo);
 	    			mViewGroup2.setVisibility(View.VISIBLE);
 	    			
+	    			mViewLeft = findViewById(R.id.loutLeft);
+	    			mViewLeft.setVisibility(View.GONE);
+	    			
+	    			mViewRight = findViewById(R.id.loutRight);
+	    			mViewRight.setVisibility(View.GONE);
+	    			
 	    			txtMyLocation = (TextView) findViewById(R.id.txtnamelmylocation);
-	    			txtMyLocation.setText("Vi tri ban dang dung");
+	    			txtMyLocation.setText("Vị trí hiện tại của bạn");
 	    			
 	    			txtbus = (TextView) findViewById(R.id.txtbus);
-	    			txtbus.setText("Tuyen xe buyt so "+ common.getBusIDFN001());
-	    			
-	    			txtTimeSpace = (TextView) findViewById(R.id.txtTimeSpace);
-	    			txtTimeSpace.setText("Khoang cach: "+common.getDirection() + "\n" +"Thoi gian toi ban:" + common.getTimeDirection());
-	    			
-	    			txtBusName = (TextView) findViewById(R.id.txtBusName);
-	    			txtBusName.setText(baseDatabaseActivity.getBusName(switchMarker.choosenBusIDInfo(common.getBusIDFN001())));	    			
-	    	  }
+	    			txtbus.setText("Tuyến xe buýt số "+ switchMarker.choosenBusIDInfo(common.getBusIDFN001()));
+    			
+	    			calulatorTime(getCurrentTimeNotSS());
+	    	     }
 	    	  }, 2000);
 	      }
 	   }
+	   
+	public void calulatorTime(final String time) {
+		
+		Handler handler = new Handler();		
+		
+  	  	handler.postDelayed(new Runnable(){
+  	  	   
+			@Override
+			public void run() {
+				
+				String[] valueArray = common.getTimeDirection().trim().split(" ");
+				String t = valueArray[0];
+				
+				SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+				Date d = null;
+				try {
+					d = df.parse(time);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(d);
+				cal.add(Calendar.MINUTE, Integer.valueOf(t));
+				
+				txtTime = (TextView) findViewById(R.id.txtTime);
+    			txtTime.setText(getCurrentTimeNotSS() + " - " + df.format(cal.getTime()));
+				
+    			txtTimeSpace = (TextView) findViewById(R.id.txtTimeSpace);
+    			txtTimeSpace.setText(common.getTimeDirection());
+    			
+    			txtRouterSpace = (TextView) findViewById(R.id.txtRouterSpace);
+    			txtRouterSpace.setText(common.getDirection());
+    			
+    			txtBusName = (TextView) findViewById(R.id.txtBusName);
+    			txtBusName.setText(baseDatabaseActivity.getBusName(switchMarker.choosenBusIDInfo(common.getBusIDFN001())));
+    			
+			} 
+  	  		
+  	  	}, 2000);
+
+	}
 	   
 	   public class DemoTrip implements RadialMenuEntry
 	   {

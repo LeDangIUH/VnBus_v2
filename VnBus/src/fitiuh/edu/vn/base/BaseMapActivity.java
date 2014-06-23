@@ -68,6 +68,7 @@ public abstract class BaseMapActivity extends FragmentActivity {
 	Common common = new Common();
 	Dialog dialog;
 	MyCustomAdapter dataAdapter = null;
+	SwitchMarker switchMarker = new SwitchMarker();
 	
 	protected int getLayoutId() {
         return R.layout.map;
@@ -86,16 +87,41 @@ public abstract class BaseMapActivity extends FragmentActivity {
 		mViewGroup2.setVisibility(View.GONE);
 		
 		mViewLeft = findViewById(R.id.loutLeft);
+		mViewLeft.setVisibility(View.VISIBLE);
+		
 		mViewRight = findViewById(R.id.loutRight);
+		mViewRight.setVisibility(View.VISIBLE);
 		
 		setUpMapIfNeeded();
 		
-		ImageButton imageButton = (ImageButton) findViewById(R.id.btnLocation);
+		//event for image filter click
+		ImageButton imageButtonFilter = (ImageButton) findViewById(R.id.btnFilter);
+		imageButtonFilter.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {				
+				displayListViewdialog();
+			}
+		});
 		
-		imageButton.setOnClickListener(new OnClickListener() {
+		// event for image refresh
+		ImageButton imageButtonRefresh = (ImageButton) findViewById(R.id.btnRestart);
+		imageButtonRefresh.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				
+				addMarker();
+			}			
+		});
+		
+		//event for get gps
+		ImageButton imageButtonGps = (ImageButton) findViewById(R.id.btnGps);
+		imageButtonGps.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			
 				// TODO Auto-generated method stub
 				double laitude = fn0003.getLatitude(getApplicationContext());
 				double longitude = fn0003.getLongitude(getApplicationContext());
@@ -105,21 +131,9 @@ public abstract class BaseMapActivity extends FragmentActivity {
 				common.setLonitudeGPS(longitude);
 				
 				fn0003.addGpsLocationMarker(getMap(), longitude, laitude, getApplicationContext());
+
 			}
 		});
-		
-		//event for image filter click
-		ImageButton imageButtonFilter = (ImageButton) findViewById(R.id.btnFilter);
-		imageButtonFilter.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				displayListViewdialog();
-			}
-		});
-		
-		// 
 		
 		// hide mViewGroup layout
 		getMap().setOnMapClickListener(new OnMapClickListener() {
@@ -129,6 +143,10 @@ public abstract class BaseMapActivity extends FragmentActivity {
 				// TODO Auto-generated method stub
 				mViewGroup.setVisibility(View.GONE);
 				mViewGroup2.setVisibility(View.GONE);
+				mViewLeft.setVisibility(View.VISIBLE);
+				mViewRight.setVisibility(View.VISIBLE);
+				
+				addMarker();
 			}
 		});
 	}
@@ -449,7 +467,6 @@ public abstract class BaseMapActivity extends FragmentActivity {
 				
 				List<BusFilter> busFilt = common.getBusFilters();
 				List<BusGPSRealtime> busGPSRealtimes = common.getBusGPSRealtimes();
-				SwitchMarker switchMarker = new SwitchMarker();
 				
 				for (BusGPSRealtime gpsRealtime : busGPSRealtimes) {
 					for (BusFilter busF : busFilters) {
@@ -553,6 +570,20 @@ public abstract class BaseMapActivity extends FragmentActivity {
 			return convertView;
 		}
 
+	}
+	
+	public void addMarker() {
+		
+		getMap().clear();
+		
+		List<BusGPSRealtime> busGPSRealtimes = common.getBusGPSRealtimes();
+		
+		for (BusGPSRealtime gpsRealtime : busGPSRealtimes) {
+					getMap().addMarker(new MarkerOptions()
+					.position(new LatLng(getLatitude(gpsRealtime.getLocation()), getLongitude(gpsRealtime.getLocation())))
+					.title(gpsRealtime.getBusID())
+					.icon(BitmapDescriptorFactory.fromResource(switchMarker.chooseMarker(gpsRealtime.getBusID()))));
+		}
 	}
 	    
 }
